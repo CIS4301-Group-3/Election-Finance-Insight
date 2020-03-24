@@ -1,0 +1,119 @@
+
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fancyhdr}
+
+\usepackage{float}
+\usepackage{xcolor}
+\graphicspath{ {./images/} }
+\restylefloat{table}
+\pagestyle{fancy}
+\setlength{\headheight}{42pt}
+\begin{document}
+%HEADER
+\lhead{Eric Lehmann \\ Kevin Aukee\\ Daniel Giampaolo}
+\rhead{CIS4301 Spring '20 \\ \today \\ Deliverable 1}
+\section{Problem}
+
+Both time and money are limited resources, especially in the field of political elections. Often campaigns spend their time and effort with the intention of raising additional funds to fuel the campaign. Due to the limited time available, it is important to optimize the time to ensure that it is effectively spent raising revenue. Providing insight into the most effective ways a campaign can spend their time, by comparing revenue raised to events that the campaign and candidate participated in, would therefore be a useful tool for any political campaign.
+
+\section{Overview}
+
+Our intent is to design and deploy a web application that allows users to gain insight into the finances of the 2020 Presidential Primary. In an election season with so many candidates, having a tool able to assist in analyzing campaign finance trends would be an invaluable asset. Each candidate is required to report information about individual donations to the Federal Election Commission. This report includes detailed information about each individual donor, including their name, the donation amount, city, and state as well as employer and occupation. We are interested in seeing comparisons to individual campaign events as well as coverage of candidates and their competitors in the news media. Lastly, we believe we will be able to gain insight into the donors by comparing their employers and occupations.
+
+\section{Data}
+
+The 2019-2020 data for the FEC has records of over 8 million contributions to candidates and committees. This bulk data will need to be trimmed of records that do not relate to the presidential primary, as well as those that are not from individual contributors. The records of interest are clearly marked by the FEC and this is not viewed by our team as a significant obstacle to the completion of our project. The raw disk size of the full list of contributions recorded by the FEC exceeds the data allotment for the CISE database server. Some local processing of this data to eliminate tuples that are not relevant to our project, such as contributions not to a presidential candidate’s primary committee, or non-individual contributions. These non-relevant tuples are clearly marked by the committee's ID and the contribution type. As with all government works, data from the FEC is public domain. Attribution to the data source will be included for the purposes of academic integrity.
+ 
+Additionally, we will need to compile data on events and media coverage of candidates. This information is available from Ballotpedia. It is worth noting that the information from Ballotpedia is licensed under the GFDL. Our use of the data from Ballotpedia is well within the scope of permitted use under the GFDL, though the use of the data will require attribution. Additional classification may be needed to flag media coverage as positive, negative, or neutral. In order to gain additional detail, information regarding the occupation and employers of donors may be beneficial to compare the size of a donation to the mean salary of a specific employer or occupation.
+
+Lastly, we will need to gather state population data in order to determine the top state donations per capita to give a better picture as to what state gives more based on their population size. We will find this data through the 2010 United States Census, since the 2020 United States Census had not yet been conducted at the time of this writing.
+
+In summary, all of  the data required for our web application is readily available for use with our project. Managing the large amount of data from the FEC does represent an obstacle, but this should be easily resolved by local processing before the data is imported into the database. Furthermore, our intended use of the data is compliant with the licensing model of all our data sources. 
+
+\section{Queries}
+
+    Here is the list of complex queries that will be performed by our application. Our application will include additional ‘simpler’ queries which are also listed below.
+\begin{enumerate}
+\item Donations over time (by city, by state, by entire country)
+Following this trend we can determine the campaigns most profitable times.
+
+\item What type of fundraising events elicit the largest number of donations? Similarly, what type of events elicit the most money?
+Donations by location data combined with donations over time trends will allow us to determine what fundraising events raise the most money.
+
+\item What states donate the most money? Similarly, what states have the highest donations per capita?
+Using this data and correlating regionally we can determine areas of greatest support for the candidate.
+
+\item Where do the top 10\% of donors reside?
+This will allow the campaign to put forth focused effort in these areas where individual donors donate the most money.
+
+\item How does media coverage affect donations? What is the percent increase/decrease in donations following positive/negative news coverage?
+Donations by location data combined with donations over time trends will allow us to correlate media events that cause the most disruption.
+\end{enumerate}
+Simpler Queries:
+\begin{itemize}
+\item Total amount of money raised
+\item Total number of donors
+\item Average donation size
+\item Average number of donations/donor
+\item Who are the top 10/top 50 donors?
+\item How many people were repeat donors?
+\item Amount donated per capita
+\end{itemize}
+
+\section{Functionality}
+
+It is our vision that the user of the tool will be able to search and select a candidate from a drop down. Once a candidate is selected we will present various statistics regarding their campaign. For ease of consumption the bulk of the statistics will be presented graphically.
+
+For a given candidate, in a given city/state/country (can only choose USA) over a specified time period, the following data would be shown:
+\begin{itemize}
+\item Donations over time graph (line graph if days are selected, bar graph if months are selected - not cumulative)
+\item Table with the following data:
+    \begin{itemize}
+        \item Total amount of money raised
+        \item Total number of donors
+        \item Average donation size
+        \item Average number of donations/donor
+        \item Who are the top 10/top 50 donors?
+        \item How many people were repeat donors?
+        \item Amount donated per capita
+        \item For a given candidate, over a specified time period, the following data would be shown:
+    \end{itemize}
+\item As a bar graph of all 50 states (select between the different options):
+    \begin{itemize}
+        \item Donations by state
+        \item Number of donations by state
+        \item Number of donors by state
+        \item Amount donated per capita
+    \end{itemize}
+
+    \begin{itemize}
+        \item As a bar graph (select between the different options):
+        \item Top 25 employers based on employee donations
+        \item Top 25 occupations based on amount donated
+    \end{itemize}
+\item As a map:
+    \begin{itemize}
+        \item Location of the top 10\% of donors
+    \end{itemize}
+
+\item In table format:
+    \begin{itemize} 
+     
+        \item List of all types of fundraising events with the amount of donations that occurred within 24 hours of that event, list in descending order
+        \item Percent increase/decrease in fundraising within 24-48 hours following negative/neutral/positive media coverage
+    \end{itemize}
+\end{itemize}
+    When selecting the filters, we will update the graphs and provide additional insight into the success or lack of for the events throughout the campaign. To enhance the user experience we would like to provide a map of US states that can be used to set the state filter, pointing and clicking on a state will render updated graphs and data. Additionally, it will be possible to narrow down the search further by selecting a city within the selected state, which will be provided as a list once the state is selected.
+
+In addition to these graphical aids, we can provide some tabular summary data for a selected event. This summary data could be average income by event type in a given location on a given or average date. This data would be best pooled into a database, where we can dynamically query and calculate values for the user of the tool. By aggregating this data and utilizing the queries mentioned above, we hope to accurately convey what worked well for a candidate throughout their campaign.
+
+\section{Toolkit}
+
+The use of the CISE department’s Oracle Server is a requirement for this project. The team has selected PHP and Oracle to manage the front-end of our web application. It may be necessary to develop a simple C++ application to import the data as provided by the FEC into the CISE database, utilizing Oracle’s OCCI interface. Hosting is likely most easily accomplished through the CISE’s Linux servers which allow student websites. Some manual processing of smaller datasets, such as the ballotpedia data regarding candidates and campaign events, will likely be required. An appropriate spreadsheet application such as Excel, Google Sheets, or LibreCalc will be utilized for this process. 
+
+\end{document}
